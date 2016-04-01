@@ -1,0 +1,1 @@
+jsdoc --pedantic -d doc/jsdoc public_html/svg-render.js

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>SVGRender</title>
+        <link rel="shortcut icon" href="">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+        <style type="text/css">
+            div#status {
+                border:1px solid black;
+                width:100%;
+                height:2em;
+                line-height:2em;
+                font-size:150%;
+                font-weight:bold;
+                font-family:Monospace;
+            }
+        </style>
+
+        <script type="text/javascript" src="bower_components/jszip/dist/jszip.js"></script> 
+        <script type="text/javascript" src="bower_components/FileSaver/FileSaver.js"></script> 
+
+        <script src="svg-render.js"></script>
+
+        <script>
+
+            /* <![CDATA[ */
+
+
+            function saveImages() {
+                //here "this" is SVGRender object
+
+                var zip = new JSZip();
+                for (var i = 0; i < this.images.length; i++) {
+                    var digitsNum = Math.ceil(Math.log10(this.images.length + 1));
+                    zip.file("out" + ("0000000000000000000" + i).substr(-digitsNum, digitsNum) + ".png", this.images[i], {base64: true, binary: true});
+                }
+                var content = zip.generate({type: "blob"});
+                saveAs(content, "images.zip");
+            }
+
+
+            function progressSignal(imgsDone, imgsTotal) {
+
+                var digitsNum = Math.ceil(Math.log10(imgsTotal + 1));
+                imgsDoneS = ("0000000000000000000" + imgsDone).substr(-digitsNum, digitsNum);
+                imgsTotalS = ("0000000000000000000" + imgsTotal).substr(-digitsNum, digitsNum);
+                msg = "Done " + imgsDoneS + " of " + imgsTotalS + " :" + ("   " + Math.round(100 * imgsDone / imgsTotal)).substr(-3, 3).replace(' ','&nbsp;') + "%";
+                document.getElementById("status").innerHTML = msg;
+            }
+
+            function startRendering() {
+
+                var imagesCount = Number(document.getElementById('svgrender_imagesCount').value) || 60;
+                var time = Number(document.getElementById('svgrender_time').value) || 1;
+                var fps = Number(document.getElementById('svgrender_fps').value) || 60;
+
+
+                svgrender = new SVGRender();
+                svgrender.load(document.getElementById('svg_file').files[0]);
+
+
+
+
+                svgrender.render({
+                    "FPS": fps,
+                    "imagesCount": imagesCount,
+                    "time": time,
+                    "progressSignal": progressSignal
+                }, saveImages); //"saveImages" is callback function
+
+            }
+
+
+            lastChanged = [];
+            function triCheck(varIndex) {
+                //variables: FPS=0, time=1, imagesCount=2
+
+
+                if (varIndex === lastChanged[lastChanged.length - 1]) {
+                    //no change in queue
+                } else {
+                    lastChanged.push(varIndex);
+                    if (lastChanged.length > 2) {
+                        lastChanged.shift();
+                    }
+                }
+
+                var imagesCount = Number(document.getElementById('svgrender_imagesCount').value);
+                var time = Number(document.getElementById('svgrender_time').value);
+                var fps = Number(document.getElementById('svgrender_fps').value);
+
+
+                var allDef = (imagesCount && imagesCount !== 0 && time && time !== 0 && fps && fps !== 0);
+
+                if (!imagesCount || imagesCount === 0 || (allDef && lastChanged.indexOf(2) === -1)) {
+                    //count #Frames
+                    document.getElementById('svgrender_imagesCount').value = time * fps;
+                } else if (!time || time === 0 || (allDef && lastChanged.indexOf(1) === -1)) {
+                    //count Total Time
+                    document.getElementById('svgrender_time').value = imagesCount / fps;
+
+                } else if (!fps || fps === 0 || (allDef && lastChanged.indexOf(0) === -1)) {
+                    //count FPS
+                    document.getElementById('svgrender_fps').value = imagesCount / time;
+                } else {
+                    throw "Queue lastChanged is corrupted!";
+                }
+            }
+
+            /* ]]> */
+        </script>
+    </head>
+    <body>
+        <div id="status"></div>
+        <form action="#" onsubmit="startRendering();
+                return false;">
+            <p><label for="svg_file">Select SVG</label> <input id="svg_file" type="file" name="svg_file"></p>
+            <p><label for="svgrender_fps">FPS</label> <input id="svgrender_fps" type="number" name="svgrender_fps" value="60" onchange="triCheck(0);"></p>
+            <p><label for="svgrender_time">Total time[s]</label> <input id="svgrender_time" type="number" name="svgrender_time" onchange="triCheck(1);"></p>
+            <p><label for="svgrender_imagesCount">#Frames</label> <input id="svgrender_imagesCount" type="number" name="svgrender_imagesCount" onchange="triCheck(2);"></p>
+            <p><input type="submit"></p>
+        </form>
+
+        <canvas id="renderArea"></canvas>
+    </body>
+</html>
