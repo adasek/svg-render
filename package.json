@@ -1,0 +1,13 @@
+{
+    "name": "SVGRender",
+    "version": "0.1.0",
+    "keywords": ["svg","animation","rendering"],
+    "author": "KDG_3",
+    "contributors": [
+        {
+            "name": "Adam Benda",
+            "email": "adam@adasek.cz"
+        }
+    ],
+    "dependencies": {}
+}

@@ -1,0 +1,14 @@
+{
+  "name": "SVGRender",
+  "version": "0.1.0",
+  "main": "path/to/main.css",
+  "ignore": [
+    ".jshintrc",
+    "**/*.txt"
+  ],
+  "dependencies": {
+    "jszip": "2.6.0",
+    "FileSaver": "*"
+  },
+  "devDependencies": {}
+}
