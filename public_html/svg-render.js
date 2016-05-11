@@ -121,7 +121,7 @@ SVGRender.prototype.render = function (options, callback) {
      * @type {function}
      * @private
      */
-    this.progressSignal = (options.processSignal || function () {});
+    this.progressSignal = (options.progressSignal || function () {});
 
 
     /**
