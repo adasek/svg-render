@@ -1,1 +1,3 @@
 doc/jsdoc/*
+public_html/bower_components
+nbproject/private
