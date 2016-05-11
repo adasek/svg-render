@@ -120,8 +120,17 @@ SVGRender.prototype.render = function (options, callback) {
      * @type {function}
      * @private
      */
-    this.progressSignal = (options.progressSignal || function () {});
-
+	this.progressSignal = (options.processSignal || function () {});
+	
+	
+	/**
+     * begin time (seconds)
+     * @type {number}
+     * @private
+     */
+    this.beginMS = (options.begin * 1000 || 0); //default begin time
+	
+	
     /**
      * Frames per Second
      * @type {number}
@@ -136,7 +145,7 @@ SVGRender.prototype.render = function (options, callback) {
      * @private
      */
     this.timeMS = (options.time * 1000 || 1000);
-
+	
 
     /**
      * Number of frames to render
@@ -221,8 +230,8 @@ SVGRender.prototype.renderNextFrame = function () {
     }
 
 
-    this.SVGtime = Math.round(1000 * this.imagesDoneCount) / (this.FPS);
-
+    this.SVGtime = this.beginMS + Math.round(1000 * this.imagesDoneCount) / (this.FPS);
+	
     this.svgElement.pauseAnimations();
     this.svgElement.setCurrentTime(this.SVGtime / 1000);
     this.svgElement.forceRedraw();
