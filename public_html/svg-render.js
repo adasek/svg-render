@@ -69,6 +69,7 @@ SVGRender.prototype.load = function (svg) {
         this.svgDivElement.innerHTML = svgCode;
         var svgElement = this.svgDivElement.children[0];
         document.body.appendChild(this.svgDivElement);
+        this.svgDivElement.style.visibility = 'hidden';
         this.load(svgElement);
         return;
     } else if (SVGSVGElement.prototype.isPrototypeOf(svg)) {
@@ -120,17 +121,17 @@ SVGRender.prototype.render = function (options, callback) {
      * @type {function}
      * @private
      */
-	this.progressSignal = (options.processSignal || function () {});
-	
-	
-	/**
+    this.progressSignal = (options.processSignal || function () {});
+
+
+    /**
      * begin time (seconds)
      * @type {number}
      * @private
      */
     this.beginMS = (options.begin * 1000 || 0); //default begin time
-	
-	
+
+
     /**
      * Frames per Second
      * @type {number}
@@ -145,7 +146,7 @@ SVGRender.prototype.render = function (options, callback) {
      * @private
      */
     this.timeMS = (options.time * 1000 || 1000);
-	
+
 
     /**
      * Number of frames to render
@@ -195,6 +196,15 @@ SVGRender.prototype.render = function (options, callback) {
      * @private
      */
     this.nextFrame = setTimeout(this.renderNextFrame.bind(this), 0);
+
+
+    /**
+     * Canvas to draw on (optional - drawing is invisible if not provided)
+     * @type {HTMLCanvasElement}
+     * @private
+     */
+    this.canvas = (options.canvas || document.createElement('canvas')); //default begin time
+
 };
 
 /**
@@ -231,7 +241,7 @@ SVGRender.prototype.renderNextFrame = function () {
 
 
     this.SVGtime = this.beginMS + Math.round(1000 * this.imagesDoneCount) / (this.FPS);
-	
+
     this.svgElement.pauseAnimations();
     this.svgElement.setCurrentTime(this.SVGtime / 1000);
     this.svgElement.forceRedraw();
@@ -253,10 +263,9 @@ SVGRender.prototype.renderNextFrame = function () {
     this.svgImage = new Image();
     this.svgImage.onload = function () {
 
-        var tmpCanvas = document.getElementById('renderArea');
-        tmpCanvasx = tmpCanvas.getContext('2d');
-        tmpCanvas.width = this.svgImage.width;
-        tmpCanvas.height = this.svgImage.height;
+        tmpCanvasx = this.canvas.getContext('2d');
+        this.canvas.width = this.svgImage.width;
+        this.canvas.height = this.svgImage.height;
         tmpCanvasx.drawImage(this.svgImage, 0, 0);
         //image now in tmpCanvas
 
@@ -266,7 +275,7 @@ SVGRender.prototype.renderNextFrame = function () {
         }
 
         // console.log("Out " + this.imagesDoneCount);
-        this.images[this.imagesDoneCount++] = tmpCanvas.toDataURL("image/png").replace(/^data:.+\/(.+);base64,/, "");
+        this.images[this.imagesDoneCount++] = this.canvas.toDataURL("image/png").replace(/^data:.+\/(.+);base64,/, "");
         if (this.imagesDoneCount < this.imagesCount) {
             nextFrame = setTimeout(this.renderNextFrame.bind(this), 0);
         } else {

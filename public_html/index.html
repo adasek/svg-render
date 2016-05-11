@@ -47,7 +47,7 @@
                 var digitsNum = Math.ceil(Math.log10(imgsTotal + 1));
                 imgsDoneS = ("0000000000000000000" + imgsDone).substr(-digitsNum, digitsNum);
                 imgsTotalS = ("0000000000000000000" + imgsTotal).substr(-digitsNum, digitsNum);
-                msg = "Done " + imgsDoneS + " of " + imgsTotalS + " :" + ("   " + Math.round(100 * imgsDone / imgsTotal)).substr(-3, 3).replace(' ','&nbsp;') + "%";
+                msg = "Done " + imgsDoneS + " of " + imgsTotalS + " :" + ("   " + Math.round(100 * imgsDone / imgsTotal)).substr(-3, 3).replace(' ', '&nbsp;') + "%";
                 document.getElementById("status").innerHTML = msg;
             }
 
@@ -68,7 +68,8 @@
                     "FPS": fps,
                     "imagesCount": imagesCount,
                     "time": time,
-                    "progressSignal": progressSignal
+                    "progressSignal": progressSignal,
+                    "canvas": document.getElementById("renderArea")
                 }, saveImages); //"saveImages" is callback function
 
             }
