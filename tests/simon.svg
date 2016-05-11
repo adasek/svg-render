@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Animated using aniGen version 0.6.4 - Contextual Bar - http://anigen.org -->
+
+<svg
+   xmlns:anigen="http://www.anigen.org/namespace"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="917.18787"
+   height="917.18787"
+   viewBox="0 0 917.18787 917.18787"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="simon.svg"
+   anigen:viewBox="0 0 917.18787 917.18787"
+   preserveAspectRatio="xMidYMid">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.49"
+     inkscape:cx="259.83673"
+     inkscape:cy="486.87755"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     fit-margin-top="50"
+     fit-margin-left="50"
+     fit-margin-right="50"
+     fit-margin-bottom="50"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="1272"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata7">
+    <rdf:rdf>
+      <cc:work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:work>
+    </rdf:rdf>
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(72.879614,3.3745543)">
+    <g
+       id="g4148"
+       transform="matrix(0.29659169,0,0,0.29659169,187.64117,440.61324)">
+      <path
+         id="path4136"
+         d="m 385.7143,173.7908 a 281.42856,281.42856 0 0 1 281.42855,281.42856 l -281.42856,0 z"
+         style="fill:#ff0000;stroke:none;stroke-linecap:round;stroke-linejoin:round"
+         inkscape:connector-curvature="0">
+        <animate
+           attributeName="display"
+           attributeType="auto"
+           values="none;inline;none;none"
+           begin="0s"
+           dur="2s"
+           calcMode="discrete"
+           repeatCount="indefinite"
+           additive="replace"
+           accumulate="none"
+           fill="remove"
+           keyTimes="0;0.25;0.5;1"
+           id="animate782" />
+      </path>
+      <path
+         id="circle4138"
+         d="M 667.14285,455.21936 A 281.42856,281.42856 0 0 1 385.7143,736.64792 l -10e-6,-281.42856 z"
+         style="fill:#0000ff;fill-opacity:1;stroke:none;stroke-linecap:round;stroke-linejoin:round"
+         inkscape:connector-curvature="0">
+        <animate
+           attributeName="display"
+           attributeType="auto"
+           values="none;inline;none;none"
+           begin="0s"
+           dur="2s"
+           calcMode="discrete"
+           repeatCount="indefinite"
+           additive="replace"
+           accumulate="none"
+           fill="remove"
+           keyTimes="0;.5;0.75;1"
+           id="animate8146" />
+      </path>
+      <path
+         id="circle4140"
+         d="M 104.28574,455.21935 A 281.42856,281.42856 0 0 1 385.7143,173.7908 l -10e-6,281.42856 z"
+         style="fill:#00ff00;fill-opacity:1;stroke:none;stroke-linecap:round;stroke-linejoin:round"
+         inkscape:connector-curvature="0">
+        <animate
+           attributeName="display"
+           attributeType="auto"
+           values="none;inline;none;none"
+           begin="0s"
+           dur="2s"
+           calcMode="discrete"
+           repeatCount="indefinite"
+           additive="replace"
+           accumulate="none"
+           fill="remove"
+           id="animate5206"
+           keyTimes="0;0;0.25;1" />
+      </path>
+      <path
+         id="circle4142"
+         d="M 385.7143,736.64792 A 281.42856,281.42856 0 0 1 186.71425,654.2194 281.42856,281.42856 0 0 1 104.28574,455.21935 l 281.42855,10e-6 z"
+         style="fill:#ffff00;fill-opacity:1;stroke:none;stroke-linecap:round;stroke-linejoin:round"
+         inkscape:connector-curvature="0">
+        <animate
+           attributeName="display"
+           attributeType="auto"
+           values="none;inline;none;none"
+           begin="0s"
+           dur="2s"
+           calcMode="discrete"
+           repeatCount="indefinite"
+           additive="replace"
+           accumulate="none"
+           fill="remove"
+           keyTimes="0;.75;1;1"
+           id="animate8147" />
+      </path>
+    </g>
+    <use
+       x="0"
+       y="0"
+       xlink:href="#g4148"
+       id="use4148"
+       transform="translate(234.69388,-3.2653061e-6)"
+       width="100%"
+       height="100%" />
+    <g
+       transform="matrix(0.29659169,0,0,0.29659169,187.64117,177.34794)"
+       id="g4150">
+      <path
+         inkscape:connector-curvature="0"
+         style="fill:#ff0000;stroke:none;stroke-linecap:round;stroke-linejoin:round"
+         d="m 385.7143,173.7908 a 281.42856,281.42856 0 0 1 281.42855,281.42856 l -281.42856,0 z"
+         id="path4152">
+        <animate
+           id="animate782"
+           keyTimes="0;0.25;0.5;1"
+           fill="remove"
+           accumulate="none"
+           additive="replace"
+           repeatCount="indefinite"
+           calcMode="discrete"
+           dur="2s"
+           begin="-0.25s"
+           values="none;inline;none;none"
+           attributeType="auto"
+           attributeName="display" />
+      </path>
+      <path
+         inkscape:connector-curvature="0"
+         style="fill:#0000ff;fill-opacity:1;stroke:none;stroke-linecap:round;stroke-linejoin:round"
+         d="M 667.14285,455.21936 A 281.42856,281.42856 0 0 1 385.7143,736.64792 l -10e-6,-281.42856 z"
+         id="path4154">
+        <animate
+           id="animate8146"
+           keyTimes="0;.5;0.75;1"
+           fill="remove"
+           accumulate="none"
+           additive="replace"
+           repeatCount="indefinite"
+           calcMode="discrete"
+           dur="2s"
+           begin="-0.25s"
+           values="none;inline;none;none"
+           attributeType="auto"
+           attributeName="display" />
+      </path>
+      <path
+         inkscape:connector-curvature="0"
+         style="fill:#00ff00;fill-opacity:1;stroke:none;stroke-linecap:round;stroke-linejoin:round"
+         d="M 104.28574,455.21935 A 281.42856,281.42856 0 0 1 385.7143,173.7908 l -10e-6,281.42856 z"
+         id="path4156">
+        <animate
+           keyTimes="0;0;0.25;1"
+           id="animate5206"
+           fill="remove"
+           accumulate="none"
+           additive="replace"
+           repeatCount="indefinite"
+           calcMode="discrete"
+           dur="2s"
+           begin="-0.25s"
+           values="none;inline;none;none"
+           attributeType="auto"
+           attributeName="display" />
+      </path>
+      <path
+         inkscape:connector-curvature="0"
+         style="fill:#ffff00;fill-opacity:1;stroke:none;stroke-linecap:round;stroke-linejoin:round"
+         d="M 385.7143,736.64792 A 281.42856,281.42856 0 0 1 186.71425,654.2194 281.42856,281.42856 0 0 1 104.28574,455.21935 l 281.42855,10e-6 z"
+         id="path4158">
+        <animate
+           id="animate8147"
+           keyTimes="0;.75;1;1"
+           fill="remove"
+           accumulate="none"
+           additive="replace"
+           repeatCount="indefinite"
+           calcMode="discrete"
+           dur="2s"
+           begin="-0.25s"
+           values="none;inline;none;none"
+           attributeType="auto"
+           attributeName="display" />
+      </path>
+    </g>
+    <use
+       x="0"
+       y="0"
+       xlink:href="#g4150"
+       id="use4160"
+       transform="translate(232.65306,-3.2653061e-6)"
+       width="100%"
+       height="100%" />
+  </g>
+</svg>
