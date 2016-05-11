@@ -1,12 +1,16 @@
 {
     "name": "SVGRender",
-    "version": "0.1.0",
-    "keywords": ["svg","animation","rendering"],
-    "author": "KDG_3",
+    "version": "0.1.1",
+    "keywords": ["svg", "animation", "rendering"],
+    "author": "A&A",
     "contributors": [
         {
             "name": "Adam Benda",
             "email": "adam@adasek.cz"
+        },
+        {
+            "name": "Ondrej Benda",
+            "email": "ai_box@volny.cz"
         }
     ],
     "dependencies": {}
