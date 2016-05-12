@@ -10,7 +10,10 @@
  * @classdesc SVG Rendering library
  * @class
  */
-var SVGRender = function () {};
+var SVGRender = function () {
+
+
+};
 
 
 /**
@@ -28,6 +31,18 @@ SVGRender.prototype.load = function (svg) {
      * @private
      */
     this.loaded = false;
+
+    /**
+     * Signalizes that computation was interrupted/paused
+     * @type Boolean
+     */
+    this.interrupted = false;
+
+    /**
+     * Signalizes that computation finished sucessfully
+     * @type Boolean
+     */
+    this.finished = false;
 
 
     if (Blob.prototype.isPrototypeOf(svg) || File.prototype.isPrototypeOf(svg)) {
@@ -239,6 +254,13 @@ SVGRender.prototype.renderNextFrame = function () {
         throw "Cannot render - no svgElement loaded!";
     }
 
+    if (this.interrupted) {
+        //rendering was stopped
+        //(this.nextFrame timeout should have been removed already!)
+        throw "this.nextFrame timeout should have been removed already!";
+        return;
+    }
+
 
     this.SVGtime = this.beginMS + Math.round(1000 * this.imagesDoneCount) / (this.FPS);
 
@@ -277,8 +299,9 @@ SVGRender.prototype.renderNextFrame = function () {
         // console.log("Out " + this.imagesDoneCount);
         this.images[this.imagesDoneCount++] = this.canvas.toDataURL("image/png").replace(/^data:.+\/(.+);base64,/, "");
         if (this.imagesDoneCount < this.imagesCount) {
-            nextFrame = setTimeout(this.renderNextFrame.bind(this), 0);
+            this.nextFrame = setTimeout(this.renderNextFrame.bind(this), 0);
         } else {
+            this.finished = true;
             this.callback();
         }
     }.bind(this);
@@ -286,3 +309,35 @@ SVGRender.prototype.renderNextFrame = function () {
     this.svgImage.src = "data:image/svg+xml;base64," + btoa("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n\
         <!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">" + svgString);
 };
+
+/**
+ * Pause rendering
+ * @returns {undefined}
+ */
+SVGRender.prototype.pause = function () {
+    console.log("paused on image#" + this.imagesDoneCount);
+    this.interrupted = true;
+    clearTimeout(this.nextFrame);
+    this.nextFrame = null;
+};
+
+/**
+ * Resumes rendering
+ * @returns {undefined}
+ */
+SVGRender.prototype.resume = function () {
+    console.log("resumed on image#" + this.imagesDoneCount);
+    if (this.finished || !this.interrupted) {
+        //not needed
+        return;
+    }
+    console.log("yay1");
+
+    this.interrupted = false;
+    if (!this.nextFrame) {
+        console.log("yay2");
+        //next frame is not scheduled
+        this.nextFrame = setTimeout(this.renderNextFrame.bind(this), 0);
+    }
+};
+

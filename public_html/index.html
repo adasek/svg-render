@@ -124,6 +124,8 @@
             <p><label for="svgrender_imagesCount">#Frames</label> <input id="svgrender_imagesCount" type="number" name="svgrender_imagesCount" onchange="triCheck(2);"></p>
             <p><input type="submit"></p>
         </form>
+        <button onclick="svgrender.pause()">Pause</button>
+        <button onclick="svgrender.resume()">Resume</button>
 
         <canvas id="renderArea"></canvas>
     </body>
