@@ -174,7 +174,7 @@ SVGRender.prototype.render = function (options, callback) {
         //imagesCount was given
         if (options.time && options.FPS) {
             //FPS+time were also given and the tree given parameters are contradicting
-            throw("Conflicting parameters FPS,time,imagesCount");
+            throw "Conflicting parameters FPS,time,imagesCount";
         } else if (options.time) {
             this.FPS = this.imagesCount * 1000 / this.timeMS;
         } else if (options.FPS) {
@@ -296,7 +296,6 @@ SVGRender.prototype.renderNextFrame = function () {
             this.progressSignal(this.imagesDoneCount, this.imagesCount);
         }
 
-        // console.log("Out " + this.imagesDoneCount);
         this.images[this.imagesDoneCount++] = this.canvas.toDataURL("image/png").replace(/^data:.+\/(.+);base64,/, "");
         if (this.imagesDoneCount < this.imagesCount) {
             this.nextFrame = setTimeout(this.renderNextFrame.bind(this), 0);
@@ -315,7 +314,6 @@ SVGRender.prototype.renderNextFrame = function () {
  * @returns {undefined}
  */
 SVGRender.prototype.pause = function () {
-    console.log("paused on image#" + this.imagesDoneCount);
     this.interrupted = true;
     clearTimeout(this.nextFrame);
     this.nextFrame = null;
@@ -326,16 +324,13 @@ SVGRender.prototype.pause = function () {
  * @returns {undefined}
  */
 SVGRender.prototype.resume = function () {
-    console.log("resumed on image#" + this.imagesDoneCount);
     if (this.finished || !this.interrupted) {
         //not needed
         return;
     }
-    console.log("yay1");
 
     this.interrupted = false;
     if (!this.nextFrame) {
-        console.log("yay2");
         //next frame is not scheduled
         this.nextFrame = setTimeout(this.renderNextFrame.bind(this), 0);
     }
