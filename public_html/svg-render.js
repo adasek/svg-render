@@ -267,12 +267,48 @@ SVGRender.prototype.renderNextFrame = function () {
     this.svgElement.pauseAnimations();
     this.svgElement.setCurrentTime(this.SVGtime / 1000);
     this.svgElement.forceRedraw();
+
+    function exportStyle(el) {
+        var ret = {};
+        ret.children = [];
+        for (var i = 0; i < el.children.length; i++) {
+            ret.children[i] = exportStyle(el.children[i]);
+        }
+
+        ret.value = {};
+        var styles = window.getComputedStyle(el);
+        /*
+         * //TODO: identify which styles have to be copied this way.
+         for (var styleType in styles) {
+         ret.value[styleType] = styles[styleType];
+         }
+         */
+        ret.value["opacity"] = styles["opacity"];
+        return ret;
+    }
+
+    function importStyle(el, data) {
+        for (var i = 0; i < el.children.length; i++) {
+            //recursive
+            importStyle(el.children[i], data.children[i]);
+        }
+        for (var styleType in data.value) {
+            el.style[styleType] = data.value[styleType];
+        }
+    }
+
     //Do deep copy of svgElement!
     var svgElementNew = this.svgElement.cloneNode(true);
+    //Copy styles
+    var styles = exportStyle(this.svgElement);
+    importStyle(svgElementNew, styles);
+
     //maybe unnescessary
     svgElementNew.pauseAnimations();
     svgElementNew.setCurrentTime(this.SVGtime / 1000);
     svgElementNew.forceRedraw();
+    document.body.appendChild(svgElementNew);
+
 
 
     this.filterOut(svgElementNew, "animate");
@@ -282,6 +318,7 @@ SVGRender.prototype.renderNextFrame = function () {
 
 
     var svgString = new XMLSerializer().serializeToString(svgElementNew);
+    console.log(svgString);
     this.svgImage = new Image();
     this.svgImage.onload = function () {
 
