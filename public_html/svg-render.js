@@ -284,6 +284,10 @@ SVGRender.prototype.renderNextFrame = function () {
          }
          */
         ret.value["opacity"] = styles["opacity"];
+        ret.value["fill"] = styles["fill"];
+        ret.value["fillOpacity"] = styles["fillOpacity"];
+        ret.value["stroke"] = styles["stroke"];
+        ret.value["strokeOpacity"] = styles["strokeOpacity"];
         return ret;
     }
 
@@ -307,7 +311,6 @@ SVGRender.prototype.renderNextFrame = function () {
     svgElementNew.pauseAnimations();
     svgElementNew.setCurrentTime(this.SVGtime / 1000);
     svgElementNew.forceRedraw();
-    document.body.appendChild(svgElementNew);
 
 
 
