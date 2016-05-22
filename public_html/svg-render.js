@@ -318,7 +318,6 @@ SVGRender.prototype.renderNextFrame = function () {
 
 
     var svgString = new XMLSerializer().serializeToString(svgElementNew);
-    console.log(svgString);
     this.svgImage = new Image();
     this.svgImage.onload = function () {
 
