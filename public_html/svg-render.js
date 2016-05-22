@@ -288,6 +288,7 @@ SVGRender.prototype.renderNextFrame = function () {
         tmpCanvasx = this.canvas.getContext('2d');
         this.canvas.width = this.svgImage.width;
         this.canvas.height = this.svgImage.height;
+        tmpCanvasx.clearRect(0, 0, this.svgImage.width, this.svgImage.height);
         tmpCanvasx.drawImage(this.svgImage, 0, 0);
         //image now in tmpCanvas
 
