@@ -268,6 +268,8 @@ SVGRender.prototype.renderNextFrame = function () {
     this.svgElement.setCurrentTime(this.SVGtime / 1000);
     this.svgElement.forceRedraw();
 
+
+    //copy style: http://stackoverflow.com/questions/2087778/javascript-copy-style
     function exportStyle(el) {
         var ret = {};
         ret.children = [];
@@ -275,19 +277,19 @@ SVGRender.prototype.renderNextFrame = function () {
             ret.children[i] = exportStyle(el.children[i]);
         }
 
-        ret.value = {};
+        ret.value = [];
         var styles = window.getComputedStyle(el);
-        /*
-         * //TODO: identify which styles have to be copied this way.
-         for (var styleType in styles) {
-         ret.value[styleType] = styles[styleType];
-         }
-         */
-        ret.value["opacity"] = styles["opacity"];
-        ret.value["fill"] = styles["fill"];
-        ret.value["fillOpacity"] = styles["fillOpacity"];
-        ret.value["stroke"] = styles["stroke"];
-        ret.value["strokeOpacity"] = styles["strokeOpacity"];
+
+        for (var i = styles.length; i-- > 0; ) {
+            var name = styles[i];
+            if (!name.match(/^height$/) && !name.match(/^width$/) && !name.match(/^visibility/)) {
+                ret.value.push({
+                    "name": name,
+                    "value": styles.getPropertyValue(name),
+                    "priority": styles.getPropertyPriority(name)
+                });
+            }
+        }
         return ret;
     }
 
@@ -296,8 +298,11 @@ SVGRender.prototype.renderNextFrame = function () {
             //recursive
             importStyle(el.children[i], data.children[i]);
         }
-        for (var styleType in data.value) {
-            el.style[styleType] = data.value[styleType];
+        for (var n = 0; n < data.value.length; n++) {
+            el.style.setProperty(data.value[n].name,
+                    data.value[n].value,
+                    data.value[n].priority
+                    );
         }
     }
 
