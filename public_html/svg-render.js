@@ -84,8 +84,7 @@ SVGRender.prototype.load = function (svg) {
         this.svgDivElement.innerHTML = svgCode;
         var svgElement = this.svgDivElement.children[0];
         document.body.appendChild(this.svgDivElement);
-        //this.svgDivElement.style.visibility = 'hidden';
-        this.svgDivElement.style.border = '2px solid black';
+        this.svgDivElement.style.visibility = 'hidden';
         this.load(svgElement);
         return;
     } else if (SVGSVGElement.prototype.isPrototypeOf(svg)) {
@@ -435,4 +434,12 @@ SVGRender.prototype.deepCopy = function (src) {
     }
 
     return dst;
+};
+
+/**
+ * Is render in progress?
+ * @returns {undefined}
+ */
+SVGRender.prototype.isActive = function () {
+    return !(this.finished);
 };

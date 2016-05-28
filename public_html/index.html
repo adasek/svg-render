@@ -27,7 +27,7 @@
         <script>
 
             /* <![CDATA[ */
-
+            svgrender = null;
 
             function saveImages() {
                 //here "this" is SVGRender object
@@ -52,6 +52,11 @@
             }
 
             function startRendering() {
+                if (svgrender && svgrender.isActive()) {
+                    console.log("Another rendering in progress");
+                    alert("Another rendering in progress");
+                    return false;
+                }
 
                 var imagesCount = Number(document.getElementById('svgrender_imagesCount').value) || 60;
                 var time = Number(document.getElementById('svgrender_time').value) || 1;
@@ -116,8 +121,7 @@
     </head>
     <body>
         <div id="status"></div>
-        <form action="#" onsubmit="startRendering();
-                return false;">
+        <form action="#" onsubmit="startRendering();return false;">
             <p><label for="svg_file">Select SVG</label> <input id="svg_file" type="file" name="svg_file"></p>
             <p><label for="svgrender_fps">FPS</label> <input id="svgrender_fps" type="number" name="svgrender_fps" value="60" onchange="triCheck(0);"></p>
             <p><label for="svgrender_time">Total time[s]</label> <input id="svgrender_time" type="number" name="svgrender_time" onchange="triCheck(1);"></p>
