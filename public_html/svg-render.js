@@ -290,10 +290,6 @@ SVGRender.prototype.renderNextFrame = function () {
         }
         var transformAnim = el.getTransformAnim();
         if (transformAnim) {
-            console.log(el);
-            console.log(transformAnim.a+" "+transformAnim.b+" "+transformAnim.c);
-            console.log(transformAnim.d+" "+transformAnim.e+" "+transformAnim.f);
-            console.log("---");
             ret.transformAnim = transformAnim;
         }
 
