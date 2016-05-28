@@ -269,88 +269,34 @@ SVGRender.prototype.renderNextFrame = function () {
     this.svgElement.setCurrentTime(this.SVGtime / 1000);
     this.svgElement.forceRedraw();
 
-    SVGElement.prototype.getTransformAnim = function () {
-        var matrix = document.createElementNS("http://www.w3.org/2000/svg", "svg").createSVGMatrix();
-        if (!this.transform || !this.transform.animVal) {
-            return matrix;
-        }
-        for (var i = 0; i < this.transform.animVal.length; i++) {
-            matrix = matrix.multiply(this.transform.animVal[i].matrix);
-        }
-        return matrix;
-    };
-
-    //copy style: http://stackoverflow.com/questions/2087778/javascript-copy-style
-    //also copy out transformMatrix
-    function exportStyle(el) {
-        var ret = {};
-        ret.children = [];
-        for (var i = 0; i < el.children.length; i++) {
-            ret.children[i] = exportStyle(el.children[i]);
-        }
-        var transformAnim = el.getTransformAnim();
-        if (transformAnim) {
-            ret.transformAnim = transformAnim;
-        }
-
-        ret.value = [];
-        var styles = window.getComputedStyle(el);
-
-        for (var i = styles.length; i-- > 0; ) {
-            var name = styles[i];
-            if (!name.match(/^height$/) && !name.match(/^width$/) && !name.match(/^visibility/)) {
-                ret.value.push({
-                    "name": name,
-                    "value": styles.getPropertyValue(name),
-                    "priority": styles.getPropertyPriority(name)
-                });
-            }
-        }
-        return ret;
-    }
-
-    function importStyle(el, data) {
-        if (el.transform && Array.isArray(el.transform.animVal)) {
-            el.transform.animVal.push(data.transformAnim);
-        }
-
-        for (var i = 0; i < el.children.length; i++) {
-            //recursive
-            importStyle(el.children[i], data.children[i]);
-        }
-        for (var n = 0; n < data.value.length; n++) {
-            el.style.setProperty(data.value[n].name,
-                    data.value[n].value,
-                    data.value[n].priority
-                    );
-        }
-    }
 
     //Do deep copy of svgElement!
     var svgElementNew = this.svgElement.cloneNode(true);
     //Copy styles
-    var styles = exportStyle(this.svgElement);
-    importStyle(svgElementNew, styles);
-
+    this.additionalData = this.exportStyle(this.svgElement);
 
 
     this.filterOut(svgElementNew, "animate");
     this.filterOut(svgElementNew, "animateTransform");
     this.filterOut(svgElementNew, "animateColor");
     //animateMotion does NOT propagate into XML or style
-    //this.filterOut(svgElementNew, "animateMotion");
+    this.filterOut(svgElementNew, "animateMotion");
 
     //maybe unnescessary
-    console.log(this.SVGtime / 1000);
-    svgElementNew.pauseAnimations();
-    svgElementNew.setCurrentTime(this.SVGtime / 1000);
-    svgElementNew.forceRedraw();
+    /*
+     console.log(this.SVGtime / 1000);
+     svgElementNew.pauseAnimations();
+     svgElementNew.setCurrentTime(this.SVGtime / 1000);
+     svgElementNew.forceRedraw();
+     */
 
 
 
     var svgString = new XMLSerializer().serializeToString(svgElementNew);
     this.svgImage = new Image();
     this.svgImage.onload = function () {
+
+        this.importStyle(this.svgImage, this.additionalData);
 
         tmpCanvasx = this.canvas.getContext('2d');
         this.canvas.width = this.svgImage.width;
@@ -404,3 +350,61 @@ SVGRender.prototype.resume = function () {
     }
 };
 
+
+SVGElement.prototype.getTransformAnim = function () {
+    var matrix = document.createElementNS("http://www.w3.org/2000/svg", "svg").createSVGMatrix();
+    if (!this.transform || !this.transform.animVal) {
+        return matrix;
+    }
+    for (var i = 0; i < this.transform.animVal.length; i++) {
+        matrix = matrix.multiply(this.transform.animVal[i].matrix);
+    }
+    return matrix;
+};
+
+//copy style: http://stackoverflow.com/questions/2087778/javascript-copy-style
+//also copy out transformMatrix
+SVGRender.prototype.exportStyle = function (el) {
+    var ret = {};
+    ret.children = [];
+    for (var i = 0; i < el.children.length; i++) {
+        ret.children[i] = this.exportStyle(el.children[i]);
+    }
+    var transformAnim = el.getTransformAnim();
+    if (transformAnim) {
+        ret.transformAnim = transformAnim;
+    }
+
+
+    ret.value = [];
+    var styles = window.getComputedStyle(el);
+
+    for (var i = styles.length; i-- > 0; ) {
+        var name = styles[i];
+        if (!name.match(/^height$/) && !name.match(/^width$/) && !name.match(/^visibility/)) {
+            ret.value.push({
+                "name": name,
+                "value": styles.getPropertyValue(name),
+                "priority": styles.getPropertyPriority(name)
+            });
+        }
+    }
+    return ret;
+};
+
+SVGRender.prototype.importStyle = function (el, data) {
+    if (el.transform && Array.isArray(el.transform.animVal)) {
+        el.transform.animVal.push(data.transformAnim);
+    }
+
+    for (var i = 0; i < el.children.length; i++) {
+        //recursive
+        this.importStyle(el.children[i], data.children[i]);
+    }
+    for (var n = 0; n < data.value.length; n++) {
+        el.style.setProperty(data.value[n].name,
+                data.value[n].value,
+                data.value[n].priority
+                );
+    }
+};
