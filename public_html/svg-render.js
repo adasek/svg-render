@@ -332,17 +332,20 @@ SVGRender.prototype.renderNextFrame = function () {
     var styles = exportStyle(this.svgElement);
     importStyle(svgElementNew, styles);
 
-    //maybe unnescessary
-    svgElementNew.pauseAnimations();
-    svgElementNew.setCurrentTime(this.SVGtime / 1000);
-    svgElementNew.forceRedraw();
-
 
 
     this.filterOut(svgElementNew, "animate");
     this.filterOut(svgElementNew, "animateTransform");
-    this.filterOut(svgElementNew, "animateMotion");
     this.filterOut(svgElementNew, "animateColor");
+    //animateMotion does NOT propagate into XML or style
+    //this.filterOut(svgElementNew, "animateMotion");
+
+    //maybe unnescessary
+    console.log(this.SVGtime / 1000);
+    svgElementNew.pauseAnimations();
+    svgElementNew.setCurrentTime(this.SVGtime / 1000);
+    svgElementNew.forceRedraw();
+
 
 
     var svgString = new XMLSerializer().serializeToString(svgElementNew);
