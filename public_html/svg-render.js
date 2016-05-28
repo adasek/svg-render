@@ -357,10 +357,13 @@ SVGRender.prototype.exportStyle = function (el) {
     for (var i = 0; i < el.children.length; i++) {
         ret.children[i] = this.exportStyle(el.children[i]);
     }
+    
+    /*
     var transformAnim = el.getTransformAnim();
     if (transformAnim) {
         ret.transformAnim = transformAnim;
     }
+    */
 
 
     if (el.getCTM && typeof (el.getCTM) === "function" && el.parentNode && el.parentNode.getCTM && typeof (el.parentNode.getCTM) === "function") {
@@ -389,14 +392,15 @@ SVGRender.prototype.importStyle = function (el, data) {
     if (!data) {
         return;
     }
-    
-    if (el.transform && Array.isArray(el.transform.animVal)) {
-        el.transform.animVal.push(data.transformAnim);
-    }
 
     if (data.matrix !== undefined) {
         el.setAttribute('transform', data.matrix.getReadable());
     }
+/*
+    if (el.transform && Array.isArray(el.transform.animVal)) {
+        el.transform.animVal.push(data.transformAnim);
+    }
+*/
 
     for (var i = 0; i < el.children.length; i++) {
         //recursive
