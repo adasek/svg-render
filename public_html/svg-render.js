@@ -408,3 +408,31 @@ SVGRender.prototype.importStyle = function (el, data) {
                 );
     }
 };
+
+/**
+ * Deep-copy element (recursive)
+ * @param {Array|String|Number|Boolean|Object} src
+ * @returns {Array|String|Number|Boolean|Object}
+ */
+SVGRender.prototype.deepCopy = function (src) {
+    var dst;
+    if (Array.isArray(src)) {
+        dst = [];
+        for (var i = 0; i < src.length; i++) {
+            dst[i] = this.deepCopy(src[i]);
+        }
+    } else if (typeof (src) === "string" || typeof (src) === "number" || typeof (src) === "boolean") {
+        return src;
+    } else if (typeof (src) === "function") {
+        return null;
+    } else if (typeof (src) === "object") {
+        dst = {};
+        for (var at in src) {
+            dst[at] = this.deepCopy(src[at]);
+        }
+    } else {
+        throw "deepCopy unknown ";
+    }
+
+    return dst;
+};
