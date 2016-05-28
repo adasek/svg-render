@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'>
+<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"  width="744.09448819" height="1052.3622047" viewBox="0 0 744.09448819 1052.3622047" id="svg2" version="1.1"  preserveAspectRatio="xMidYMid" xmlns:xlink="http://www.w3.org/1999/xlink">
+ 
+  <g id="layer1">
+    <rect 
+    style="opacity:1;fill:#ffff00;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:5;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     id="rect4167" width="83.698357" height="83.698357" x="96.686028" y="79.729584">
+     <animateMotion rotate="0" 
+     path="M 10 10 C 100 100 200 -100 200 200 C 400 100 Z" keyPoints="0;1" calcMode="spline" keyTimes="0;1" keySplines="0 0 1 1" dur="1s" begin="0s" repeatCount="0" additive="sum" accumulative="none" fill="freeze" id="animateMotion9762"></animateMotion></rect>
+      </g>
+</svg>
