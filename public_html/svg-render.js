@@ -386,6 +386,10 @@ SVGRender.prototype.exportStyle = function (el) {
 };
 
 SVGRender.prototype.importStyle = function (el, data) {
+    if (!data) {
+        return;
+    }
+    
     if (el.transform && Array.isArray(el.transform.animVal)) {
         el.transform.animVal.push(data.transformAnim);
     }
