@@ -274,7 +274,6 @@ SVGRender.prototype.renderNextFrame = function () {
     //Copy styles
     this.additionalData = this.exportStyle(this.svgElement);
 
-
     this.filterOut(svgElementNew, "animate");
     this.filterOut(svgElementNew, "animateTransform");
     this.filterOut(svgElementNew, "animateColor");
@@ -289,13 +288,12 @@ SVGRender.prototype.renderNextFrame = function () {
      svgElementNew.forceRedraw();
      */
 
+    this.importStyle(svgElementNew, this.additionalData);
 
 
     var svgString = new XMLSerializer().serializeToString(svgElementNew);
     this.svgImage = new Image();
     this.svgImage.onload = function () {
-
-        this.importStyle(this.svgImage, this.additionalData);
 
         tmpCanvasx = this.canvas.getContext('2d');
         this.canvas.width = this.svgImage.width;
@@ -350,16 +348,6 @@ SVGRender.prototype.resume = function () {
 };
 
 
-SVGElement.prototype.getTransformAnim = function () {
-    var matrix = document.createElementNS("http://www.w3.org/2000/svg", "svg").createSVGMatrix();
-    if (!this.transform || !this.transform.animVal) {
-        return matrix;
-    }
-    for (var i = 0; i < this.transform.animVal.length; i++) {
-        matrix = matrix.multiply(this.transform.animVal[i].matrix);
-    }
-    return matrix;
-};
 
 //copy style: http://stackoverflow.com/questions/2087778/javascript-copy-style
 //also copy out transformMatrix
@@ -374,6 +362,12 @@ SVGRender.prototype.exportStyle = function (el) {
         ret.transformAnim = transformAnim;
     }
 
+
+    if (el.getCTM && typeof (el.getCTM) === "function" && el.parentNode && el.parentNode.getCTM && typeof (el.parentNode.getCTM) === "function") {
+        if (el.parentNode.getCTM()) {
+            ret.matrix = el.parentNode.getCTM().inverse().multiply(el.getCTM());
+        }
+    }
 
     ret.value = [];
     var styles = window.getComputedStyle(el);
@@ -396,6 +390,10 @@ SVGRender.prototype.importStyle = function (el, data) {
         el.transform.animVal.push(data.transformAnim);
     }
 
+    if (data.matrix !== undefined) {
+        el.setAttribute('transform', data.matrix.getReadable());
+    }
+
     for (var i = 0; i < el.children.length; i++) {
         //recursive
         this.importStyle(el.children[i], data.children[i]);
@@ -406,6 +404,8 @@ SVGRender.prototype.importStyle = function (el, data) {
                 data.value[n].priority
                 );
     }
+
+
 };
 
 /**
@@ -442,4 +442,20 @@ SVGRender.prototype.deepCopy = function (src) {
  */
 SVGRender.prototype.isActive = function () {
     return !(this.finished);
+};
+
+
+SVGElement.prototype.getTransformAnim = function () {
+    var matrix = document.createElementNS("http://www.w3.org/2000/svg", "svg").createSVGMatrix();
+    if (!this.transform || !this.transform.animVal) {
+        return matrix;
+    }
+    for (var i = 0; i < this.transform.animVal.length; i++) {
+        matrix = matrix.multiply(this.transform.animVal[i].matrix);
+    }
+    return matrix;
+};
+
+SVGMatrix.prototype.getReadable = function () {
+    return "matrix(" + this.a + " " + this.b + " " + this.c + " " + this.d + " " + this.e + " " + this.f + ")";
 };
