@@ -84,7 +84,8 @@ SVGRender.prototype.load = function (svg) {
         this.svgDivElement.innerHTML = svgCode;
         var svgElement = this.svgDivElement.children[0];
         document.body.appendChild(this.svgDivElement);
-        this.svgDivElement.style.visibility = 'hidden';
+        //this.svgDivElement.style.visibility = 'hidden';
+        this.svgDivElement.style.border = '2px solid black';
         this.load(svgElement);
         return;
     } else if (SVGSVGElement.prototype.isPrototypeOf(svg)) {
@@ -268,13 +269,32 @@ SVGRender.prototype.renderNextFrame = function () {
     this.svgElement.setCurrentTime(this.SVGtime / 1000);
     this.svgElement.forceRedraw();
 
+    SVGElement.prototype.getTransformAnim = function () {
+        var matrix = document.createElementNS("http://www.w3.org/2000/svg", "svg").createSVGMatrix();
+        if (!this.transform || !this.transform.animVal) {
+            return matrix;
+        }
+        for (var i = 0; i < this.transform.animVal.length; i++) {
+            matrix = matrix.multiply(this.transform.animVal[i].matrix);
+        }
+        return matrix;
+    };
 
     //copy style: http://stackoverflow.com/questions/2087778/javascript-copy-style
+    //also copy out transformMatrix
     function exportStyle(el) {
         var ret = {};
         ret.children = [];
         for (var i = 0; i < el.children.length; i++) {
             ret.children[i] = exportStyle(el.children[i]);
+        }
+        var transformAnim = el.getTransformAnim();
+        if (transformAnim) {
+            console.log(el);
+            console.log(transformAnim.a+" "+transformAnim.b+" "+transformAnim.c);
+            console.log(transformAnim.d+" "+transformAnim.e+" "+transformAnim.f);
+            console.log("---");
+            ret.transformAnim = transformAnim;
         }
 
         ret.value = [];
@@ -294,6 +314,10 @@ SVGRender.prototype.renderNextFrame = function () {
     }
 
     function importStyle(el, data) {
+        if (el.transform && Array.isArray(el.transform.animVal)) {
+            el.transform.animVal.push(data.transformAnim);
+        }
+
         for (var i = 0; i < el.children.length; i++) {
             //recursive
             importStyle(el.children[i], data.children[i]);
