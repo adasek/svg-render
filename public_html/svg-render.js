@@ -14,8 +14,6 @@ var SVGRender = function () {
 
 
 };
-
-
 /**
  * Loads one SVG image from various source.
  * Will wipe out previously loaded image
@@ -31,20 +29,16 @@ SVGRender.prototype.load = function (svg) {
      * @private
      */
     this.loaded = false;
-
     /**
      * Signalizes that computation was interrupted/paused
      * @type Boolean
      */
     this.interrupted = false;
-
     /**
      * Signalizes that computation finished sucessfully
      * @type Boolean
      */
     this.finished = false;
-
-
     if (Blob.prototype.isPrototypeOf(svg) || File.prototype.isPrototypeOf(svg)) {
 //to be read with FileReader
         if (!svg.type || svg.type !== "image/svg+xml") {
@@ -72,7 +66,6 @@ SVGRender.prototype.load = function (svg) {
             return;
         }.bind(this);
         return;
-
     } else if (typeof svg === "string") {
         //svg xml code
         var svgCode = svg;
@@ -84,7 +77,7 @@ SVGRender.prototype.load = function (svg) {
         this.svgDivElement.innerHTML = svgCode;
         var svgElement = this.svgDivElement.children[0];
         document.body.appendChild(this.svgDivElement);
-        this.svgDivElement.style.visibility = 'hidden';
+        // this.svgDivElement.style.visibility = 'hidden';
         this.load(svgElement);
         return;
     } else if (SVGSVGElement.prototype.isPrototypeOf(svg)) {
@@ -101,7 +94,6 @@ SVGRender.prototype.load = function (svg) {
         throw "Unknown svg type in svg-render!";
     }
 };
-
 /**
  * Start rendering
  * @param {Object} options - contains numbers FPS, time, imagesCount and function progressSignal
@@ -137,8 +129,6 @@ SVGRender.prototype.render = function (options, callback) {
      * @private
      */
     this.progressSignal = (options.progressSignal || function () {});
-
-
     /**
      * begin time (seconds)
      * @type {number}
@@ -161,15 +151,12 @@ SVGRender.prototype.render = function (options, callback) {
      * @private
      */
     this.timeMS = (options.time * 1000 || 1000);
-
-
     /**
      * Number of frames to render
      * @type {number}
      * @private
      */
     this.imagesCount = Math.round(this.FPS * this.timeMS / 1000);
-
     if (options.imagesCount && options.imagesCount !== this.imagesCount) {
         //imagesCount was given
         if (options.time && options.FPS) {
@@ -195,24 +182,18 @@ SVGRender.prototype.render = function (options, callback) {
      * @public
      */
     this.imagesDoneCount = 0;
-
-
     /**
      * Array of all rendered images in png format
      * @type {base64}
      * @public
      */
     this.images = [];
-
-
     /**
      * Array of all rendered images in png format
      * @type {number}
      * @private
      */
     this.nextFrame = setTimeout(this.renderNextFrame.bind(this), 0);
-
-
     /**
      * Canvas to draw on (optional - drawing is invisible if not provided)
      * @type {HTMLCanvasElement}
@@ -221,7 +202,6 @@ SVGRender.prototype.render = function (options, callback) {
     this.canvas = (options.canvas || document.createElement('canvas')); //default begin time
 
 };
-
 /**
  * Goes through DOM tree of given HTMLElement and removes specific tags 
  * @param {HTMLElement} htmlElement
@@ -243,7 +223,6 @@ SVGRender.prototype.filterOut = function (htmlElement, tags) {
     }
     return ret;
 };
-
 /**
  * Render next frame and schedule next run of render next frame
  * @returns {undefined}
@@ -263,35 +242,21 @@ SVGRender.prototype.renderNextFrame = function () {
 
 
     this.SVGtime = this.beginMS + Math.round(1000 * this.imagesDoneCount) / (this.FPS);
-
     this.svgElement.pauseAnimations();
     this.svgElement.setCurrentTime(this.SVGtime / 1000);
-    this.svgElement.forceRedraw();
-
-
     //Do deep copy of svgElement!
     var svgElementNew = this.svgElement.cloneNode(true);
+    //maybe unnescessary
+    svgElementNew.pauseAnimations();
+    svgElementNew.setCurrentTime(this.SVGtime / 1000);
+    svgElementNew.forceRedraw();
     //Copy styles
     this.additionalData = this.exportStyle(this.svgElement);
-
-    this.filterOut(svgElementNew, "animate");
-    this.filterOut(svgElementNew, "animateTransform");
-    this.filterOut(svgElementNew, "animateColor");
-    //animateMotion does NOT propagate into XML or style
-    this.filterOut(svgElementNew, "animateMotion");
-
-    //maybe unnescessary
-    /*
-     console.log(this.SVGtime / 1000);
-     svgElementNew.pauseAnimations();
-     svgElementNew.setCurrentTime(this.SVGtime / 1000);
-     svgElementNew.forceRedraw();
-     */
-
+    this.filterOut(svgElementNew, ["animate", "animateTransform", "animateColor", "animateMotion"]);
     this.importStyle(svgElementNew, this.additionalData);
-
-
     var svgString = new XMLSerializer().serializeToString(svgElementNew);
+    //console.log(svgString);
+
     this.svgImage = new Image();
     this.svgImage.onload = function () {
 
@@ -315,11 +280,9 @@ SVGRender.prototype.renderNextFrame = function () {
             this.callback();
         }
     }.bind(this);
-
     this.svgImage.src = "data:image/svg+xml;base64," + btoa("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n\
         <!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">" + unescape(encodeURIComponent(svgString)));
 };
-
 /**
  * Pause rendering
  * @returns {undefined}
@@ -329,7 +292,6 @@ SVGRender.prototype.pause = function () {
     clearTimeout(this.nextFrame);
     this.nextFrame = null;
 };
-
 /**
  * Resumes rendering
  * @returns {undefined}
@@ -346,9 +308,6 @@ SVGRender.prototype.resume = function () {
         this.nextFrame = setTimeout(this.renderNextFrame.bind(this), 0);
     }
 };
-
-
-
 //copy style: http://stackoverflow.com/questions/2087778/javascript-copy-style
 //also copy out transformMatrix
 SVGRender.prototype.exportStyle = function (el) {
@@ -357,24 +316,21 @@ SVGRender.prototype.exportStyle = function (el) {
     for (var i = 0; i < el.children.length; i++) {
         ret.children[i] = this.exportStyle(el.children[i]);
     }
-    
-    /*
+
     var transformAnim = el.getTransformAnim();
     if (transformAnim) {
         ret.transformAnim = transformAnim;
     }
-    */
 
 
     if (el.getCTM && typeof (el.getCTM) === "function" && el.parentNode && el.parentNode.getCTM && typeof (el.parentNode.getCTM) === "function") {
         if (el.parentNode.getCTM()) {
-            ret.matrix = el.parentNode.getCTM().inverse().multiply(el.getCTM());
+            ret.ctm = el.parentNode.getCTM().inverse().multiply(el.getCTM());
         }
     }
 
     ret.value = [];
     var styles = window.getComputedStyle(el);
-
     for (var i = styles.length; i-- > 0; ) {
         var name = styles[i];
         if (!name.match(/^height$/) && !name.match(/^width$/) && !name.match(/^visibility/)) {
@@ -393,14 +349,19 @@ SVGRender.prototype.importStyle = function (el, data) {
         return;
     }
 
-    if (data.matrix !== undefined) {
-        el.setAttribute('transform', data.matrix.getReadable());
+    var matrix = this.svgElement.createSVGMatrix();
+
+    if (data.ctm !== undefined) {
+        matrix = matrix.multiply(data.ctm);
     }
-/*
-    if (el.transform && Array.isArray(el.transform.animVal)) {
-        el.transform.animVal.push(data.transformAnim);
+
+    if (data.transform !== undefined) {
+        matrix = matrix.multiply(data.transform);
     }
-*/
+
+
+    el.setAttribute('transform', matrix.getReadable());
+
 
     for (var i = 0; i < el.children.length; i++) {
         //recursive
@@ -415,7 +376,6 @@ SVGRender.prototype.importStyle = function (el, data) {
 
 
 };
-
 /**
  * Deep-copy element (recursive)
  * @param {Array|String|Number|Boolean|Object} src
@@ -443,7 +403,6 @@ SVGRender.prototype.deepCopy = function (src) {
 
     return dst;
 };
-
 /**
  * Is render in progress?
  * @returns {undefined}
@@ -451,8 +410,6 @@ SVGRender.prototype.deepCopy = function (src) {
 SVGRender.prototype.isActive = function () {
     return !(this.finished);
 };
-
-
 SVGElement.prototype.getTransformAnim = function () {
     var matrix = document.createElementNS("http://www.w3.org/2000/svg", "svg").createSVGMatrix();
     if (!this.transform || !this.transform.animVal) {
@@ -463,7 +420,6 @@ SVGElement.prototype.getTransformAnim = function () {
     }
     return matrix;
 };
-
 SVGMatrix.prototype.getReadable = function () {
     return "matrix(" + this.a + " " + this.b + " " + this.c + " " + this.d + " " + this.e + " " + this.f + ")";
 };
