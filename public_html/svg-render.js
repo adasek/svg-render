@@ -77,7 +77,7 @@ SVGRender.prototype.load = function (svg) {
         this.svgDivElement.innerHTML = svgCode;
         var svgElement = this.svgDivElement.children[0];
         document.body.appendChild(this.svgDivElement);
-        // this.svgDivElement.style.visibility = 'hidden';
+        this.svgDivElement.style.visibility = 'hidden';
         this.load(svgElement);
         return;
     } else if (SVGSVGElement.prototype.isPrototypeOf(svg)) {
@@ -256,7 +256,7 @@ SVGRender.prototype.renderNextFrame = function () {
     //Clone element at t=0
     var svgElementNew = this.svgElement.cloneNode(true);
 
-    //this.svgElement.setCurrentTime(this.SVGtime / 1000);
+    this.svgElement.setCurrentTime(this.SVGtime / 1000);
 
     //maybe unnescessary
     svgElementNew.pauseAnimations();
