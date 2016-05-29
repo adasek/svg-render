@@ -202,6 +202,7 @@ SVGRender.prototype.render = function (options, callback) {
     this.canvas = (options.canvas || document.createElement('canvas')); //default begin time
 
 };
+
 /**
  * Goes through DOM tree of given HTMLElement and removes specific tags 
  * @param {HTMLElement} htmlElement
@@ -210,19 +211,25 @@ SVGRender.prototype.render = function (options, callback) {
  * 
  * @private
  */
-SVGRender.prototype.filterOut = function (htmlElement, tags) {
+SVGRender.prototype.filterOut = function (htmlElement, tags, lvl) {
     var ret = 0;
-    if (tags.indexOf(htmlElement.tagName) >= 0) {
-        htmlElement.parentNode.removeChild(htmlElement);
-        return 1;
-    } else {
-        //call filterOut recursively
-        for (var i = 0; i < htmlElement.children.length; i++) {
-            ret += this.filterOut(htmlElement.children[i], tags);
+    var lvlString = "";
+    for (var i = 0; i < lvl; i++) {
+        lvlString += " ";
+    }
+    for (var i = 0; i < htmlElement.childNodes.length; i++) {
+        if (tags.indexOf(htmlElement.childNodes[i].tagName) >= 0) {
+            htmlElement.removeChild(htmlElement.childNodes[i]);
+            ret++;
+            i = -1;
+        } else {
+            //call filterOut recursively
+            ret += this.filterOut(htmlElement.childNodes[i], tags, lvl + 1);
         }
     }
     return ret;
 };
+
 /**
  * Render next frame and schedule next run of render next frame
  * @returns {undefined}
@@ -243,19 +250,24 @@ SVGRender.prototype.renderNextFrame = function () {
 
     this.SVGtime = this.beginMS + Math.round(1000 * this.imagesDoneCount) / (this.FPS);
     this.svgElement.pauseAnimations();
-    this.svgElement.setCurrentTime(this.SVGtime / 1000);
+    this.svgElement.setCurrentTime(0);
+
     //Do deep copy of svgElement!
+    //Clone element at t=0
     var svgElementNew = this.svgElement.cloneNode(true);
+
+    //this.svgElement.setCurrentTime(this.SVGtime / 1000);
+
     //maybe unnescessary
     svgElementNew.pauseAnimations();
-    svgElementNew.setCurrentTime(this.SVGtime / 1000);
-    svgElementNew.forceRedraw();
+
     //Copy styles
     this.additionalData = this.exportStyle(this.svgElement);
-    this.filterOut(svgElementNew, ["animate", "animateTransform", "animateColor", "animateMotion"]);
-    this.importStyle(svgElementNew, this.additionalData);
-    var svgString = new XMLSerializer().serializeToString(svgElementNew);
-    //console.log(svgString);
+    this.filterOut(svgElementNew, ["animate", "animateTransform", "animateColor", "animateMotion", "animateColor"], 0);
+    console.dir(svgElementNew);
+
+    //this.importStyle(svgElementNew, this.additionalData);
+    var svgString = (new XMLSerializer()).serializeToString(svgElementNew);
 
     this.svgImage = new Image();
     this.svgImage.onload = function () {
@@ -359,22 +371,24 @@ SVGRender.prototype.importStyle = function (el, data) {
         matrix = matrix.multiply(data.transform);
     }
 
+    matrix = matrix.inverse();
 
+    if (el.getAttribute("transform")) {
+        console.log(el.tagName + ":" + el.getAttribute("transform"));
+    }
     el.setAttribute('transform', matrix.getReadable());
-
 
     for (var i = 0; i < el.children.length; i++) {
         //recursive
         this.importStyle(el.children[i], data.children[i]);
     }
+
     for (var n = 0; n < data.value.length; n++) {
         el.style.setProperty(data.value[n].name,
                 data.value[n].value,
                 data.value[n].priority
                 );
     }
-
-
 };
 /**
  * Deep-copy element (recursive)
