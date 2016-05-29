@@ -262,11 +262,10 @@ SVGRender.prototype.renderNextFrame = function () {
     svgElementNew.pauseAnimations();
 
     //Copy styles
-    this.additionalData = this.exportStyle(this.svgElement);
     this.filterOut(svgElementNew, ["animate", "animateTransform", "animateColor", "animateMotion", "animateColor"], 0);
-    console.dir(svgElementNew);
+    this.additionalData = this.exportStyle(this.svgElement, ["animate", "animateTransform", "animateColor", "animateMotion", "animateColor"]);
 
-    //this.importStyle(svgElementNew, this.additionalData);
+    this.importStyle(svgElementNew, this.additionalData);
     var svgString = (new XMLSerializer()).serializeToString(svgElementNew);
 
     this.svgImage = new Image();
@@ -322,11 +321,15 @@ SVGRender.prototype.resume = function () {
 };
 //copy style: http://stackoverflow.com/questions/2087778/javascript-copy-style
 //also copy out transformMatrix
-SVGRender.prototype.exportStyle = function (el) {
+SVGRender.prototype.exportStyle = function (el, ignored) {
     var ret = {};
     ret.children = [];
     for (var i = 0; i < el.children.length; i++) {
-        ret.children[i] = this.exportStyle(el.children[i]);
+        if (ignored.indexOf(el.children[i].tagName) >= 0) {
+            //this is ignored tag
+        } else {
+            ret.children.push(this.exportStyle(el.children[i], ignored));
+        }
     }
 
     var transformAnim = el.getTransformAnim();
@@ -371,11 +374,7 @@ SVGRender.prototype.importStyle = function (el, data) {
         matrix = matrix.multiply(data.transform);
     }
 
-    matrix = matrix.inverse();
 
-    if (el.getAttribute("transform")) {
-        console.log(el.tagName + ":" + el.getAttribute("transform"));
-    }
     el.setAttribute('transform', matrix.getReadable());
 
     for (var i = 0; i < el.children.length; i++) {
@@ -383,12 +382,12 @@ SVGRender.prototype.importStyle = function (el, data) {
         this.importStyle(el.children[i], data.children[i]);
     }
 
-    for (var n = 0; n < data.value.length; n++) {
-        el.style.setProperty(data.value[n].name,
-                data.value[n].value,
-                data.value[n].priority
-                );
-    }
+     for (var n = 0; n < data.value.length; n++) {
+     el.style.setProperty(data.value[n].name,
+     data.value[n].value,
+     data.value[n].priority
+     );
+     }
 };
 /**
  * Deep-copy element (recursive)
