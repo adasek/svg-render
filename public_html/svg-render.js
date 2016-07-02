@@ -250,13 +250,12 @@ SVGRender.prototype.renderNextFrame = function () {
 
     this.SVGtime = this.beginMS + Math.round(1000 * this.imagesDoneCount) / (this.FPS);
     this.svgElement.pauseAnimations();
-    this.svgElement.setCurrentTime(0);
+    this.svgElement.setCurrentTime(this.SVGtime / 1000);
 
     //Do deep copy of svgElement!
     //Clone element at t=0
     var svgElementNew = this.svgElement.cloneNode(true);
 
-    this.svgElement.setCurrentTime(this.SVGtime / 1000);
 
     //maybe unnescessary
     svgElementNew.pauseAnimations();
@@ -382,12 +381,12 @@ SVGRender.prototype.importStyle = function (el, data) {
         this.importStyle(el.children[i], data.children[i]);
     }
 
-     for (var n = 0; n < data.value.length; n++) {
-     el.style.setProperty(data.value[n].name,
-     data.value[n].value,
-     data.value[n].priority
-     );
-     }
+    for (var n = 0; n < data.value.length; n++) {
+        el.style.setProperty(data.value[n].name,
+                data.value[n].value,
+                data.value[n].priority
+                );
+    }
 };
 /**
  * Deep-copy element (recursive)
