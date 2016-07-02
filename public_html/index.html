@@ -121,7 +121,7 @@
     </head>
     <body>
         <div id="status"></div>
-        <form action="#" onsubmit="startRendering();return false;">
+        <form action="#" id="svgrender_form">
             <p><label for="svg_file">Select SVG</label> <input id="svg_file" type="file" name="svg_file"></p>
             <p><label for="svgrender_fps">FPS</label> <input id="svgrender_fps" type="number" name="svgrender_fps" value="60" onchange="triCheck(0);"></p>
             <p><label for="svgrender_time">Total time[s]</label> <input id="svgrender_time" type="number" name="svgrender_time" onchange="triCheck(1);"></p>
@@ -132,5 +132,12 @@
         <button onclick="svgrender.resume()">Resume</button>
 
         <canvas id="renderArea"></canvas>
+
+        <script type="text/javascript">
+            document.getElementById("svgrender_form").onsubmit = function () {
+                startRendering();
+                return false;
+            }
+        </script>
     </body>
 </html>
