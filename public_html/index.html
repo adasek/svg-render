@@ -29,16 +29,25 @@
             /* <![CDATA[ */
             svgrender = null;
 
-            function saveImages() {
-                //here "this" is SVGRender object
-
-                var zip = new JSZip();
-                for (var i = 0; i < this.images.length; i++) {
-                    var digitsNum = Math.ceil(Math.log10(this.images.length + 1));
-                    zip.file("out" + ("0000000000000000000" + i).substr(-digitsNum, digitsNum) + ".png", this.images[i], {base64: true, binary: true});
+            /**
+             * @param {Object} err - Rendering error, null if everything ok
+             * @param {String[]} imagesArray - result: images in png base64 encoded
+             * @returns {Boolean}
+             */
+            function saveImages(err, imagesArray) {
+                if (err) {
+                    //something happened
+                    alert("Error during rendering");
+                    throw err;
+                } else {
+                    var zip = new JSZip();
+                    for (var i = 0; i < imagesArray.length; i++) {
+                        var digitsNum = Math.ceil(Math.log10(imagesArray.length + 1));
+                        zip.file("out" + ("0000000000000000000" + i).substr(-digitsNum, digitsNum) + ".png", imagesArray[i], {base64: true, binary: true});
+                    }
+                    var content = zip.generate({type: "blob"});
+                    saveAs(content, "images.zip");
                 }
-                var content = zip.generate({type: "blob"});
-                saveAs(content, "images.zip");
             }
 
 
