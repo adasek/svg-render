@@ -8,7 +8,8 @@ module.exports = function (config) {
             'node_modules/resemblejs/resemble.js',
             'public_html/svg-render.js',
             'test/*.js',
-            {pattern: 'test/img/*.png', watched: false, included: false, served: true, nocache: false}
+            {pattern: 'test/img/*.png', watched: false, included: false, served: true, nocache: false},
+            {pattern: 'test/svg/*.svg', watched: false, included: false, served: true, nocache: false}
         ],
         exclude: [
         ],
@@ -19,6 +20,7 @@ module.exports = function (config) {
         plugins: [
             "karma-jasmine",
             "karma-chrome-launcher"
-        ]
+        ],
+        browserNoActivityTimeout: 3600000
     });
 };
