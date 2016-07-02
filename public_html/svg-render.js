@@ -290,6 +290,12 @@ SVGRender.prototype.renderNextFrame = function () {
             this.callback();
         }
     }.bind(this);
+
+    //firefox inserts local URL into ids
+    //fixing this behavior by replacing all appearances
+    var docURL = window.location.href.split("#")[0];
+    svgString = svgString.split(docURL + "#").join("#");
+
     this.svgImage.src = "data:image/svg+xml;base64," + btoa("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n\
         <!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">" + unescape(encodeURIComponent(svgString)));
 };
