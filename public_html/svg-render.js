@@ -24,7 +24,7 @@ var SVGRender = function () {
  * Loads one SVG image from various source.
  * Will wipe out previously loaded image
  * @param {SVGSVGElement |  Blob | File | String} svg - svg element or its source
- * @param {function} callback
+ * @param {function} callback with parameters (err, SVGRender)
  * @returns {undefined}
  * 
  * @public
@@ -104,7 +104,7 @@ SVGRender.prototype.load = function (svg, callback) {
         this.loaded = true;
         //finally call the callback
         setTimeout(function () {
-            this.afterLoadCB();
+            this.afterLoadCB(null, this);
         }.bind(this), 0);
 
         return;

@@ -64,7 +64,7 @@
 
 
                 svgrender = new SVGRender();
-                svgrender.load(document.getElementById('svg_file').files[0], function () {
+                svgrender.load(document.getElementById('svg_file').files[0], function (err, svgrender) {
 
                     var ret = svgrender.render({
                         "FPS": fps,
@@ -78,7 +78,7 @@
                         alert("Rendering not started:\n" + svgrender.getErrorMessage());
                         return false;
                     }
-                    
+
                 });
 
 
