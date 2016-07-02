@@ -30,6 +30,8 @@ var SVGRender = function () {
  * @public
  **/
 SVGRender.prototype.load = function (svg, callback) {
+
+
     /**
      * Loading from a file is asynchronous = do not call render() untill file is loaded.
      * @type {Boolean}
@@ -46,6 +48,9 @@ SVGRender.prototype.load = function (svg, callback) {
      * @type {function}
      */
     this.afterLoadCB = callback;
+    if (!this.afterLoadCB) {
+        this.afterLoadCB = function () {};
+    }
 
     /**
      * Signalizes that computation finished sucessfully
@@ -308,7 +313,7 @@ SVGRender.prototype.renderNextFrame = function () {
             this.nextFrame = setTimeout(this.renderNextFrame.bind(this), 0);
         } else {
             this.finished = true;
-            this.callback();
+            this.callback(null, this.images);
         }
     }.bind(this);
 
