@@ -64,19 +64,28 @@
 
 
                 svgrender = new SVGRender();
-                svgrender.load(document.getElementById('svg_file').files[0]);
+                svgrender.load(document.getElementById('svg_file').files[0], function () {
+
+                    var ret = svgrender.render({
+                        "FPS": fps,
+                        "imagesCount": imagesCount,
+                        "time": time,
+                        "progressSignal": progressSignal,
+                        "canvas": document.getElementById("renderArea")
+                    }, saveImages); //"saveImages" is callback function
+
+                    if (!ret) {
+                        alert("Rendering not started:\n" + svgrender.getErrorMessage());
+                        return false;
+                    }
+                    
+                });
 
 
 
 
-                svgrender.render({
-                    "FPS": fps,
-                    "imagesCount": imagesCount,
-                    "time": time,
-                    "progressSignal": progressSignal,
-                    "canvas": document.getElementById("renderArea")
-                }, saveImages); //"saveImages" is callback function
 
+                return true;
             }
 
 

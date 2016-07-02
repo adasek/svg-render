@@ -12,17 +12,24 @@
  */
 var SVGRender = function () {
 
-
+    /**
+     * Last error message. Retrieve with method getErrorMessage()
+     * @type {String}
+     * @private
+     */
+    this.errMessage = "";
 };
+
 /**
  * Loads one SVG image from various source.
  * Will wipe out previously loaded image
  * @param {SVGSVGElement |  Blob | File | String} svg - svg element or its source
+ * @param {function} callback
  * @returns {undefined}
  * 
  * @public
  **/
-SVGRender.prototype.load = function (svg) {
+SVGRender.prototype.load = function (svg, callback) {
     /**
      * Loading from a file is asynchronous = do not call render() untill file is loaded.
      * @type {Boolean}
@@ -31,9 +38,15 @@ SVGRender.prototype.load = function (svg) {
     this.loaded = false;
     /**
      * Signalizes that computation was interrupted/paused
-     * @type Boolean
+     * @type {Boolean}
      */
     this.interrupted = false;
+
+    /**
+     * @type {function}
+     */
+    this.afterLoadCB = callback;
+
     /**
      * Signalizes that computation finished sucessfully
      * @type Boolean
@@ -61,7 +74,7 @@ SVGRender.prototype.load = function (svg) {
             var matches = svgCodeB64.match(regex);
             var data = matches[2];
             var svgCode = atob(data);
-            this.load.bind(this)(svgCode);
+            this.load.bind(this)(svgCode, this.afterLoadCB);
             //Call load function again - but with svg source loaded from file
             return;
         }.bind(this);
@@ -78,7 +91,7 @@ SVGRender.prototype.load = function (svg) {
         var svgElement = this.svgDivElement.children[0];
         document.body.appendChild(this.svgDivElement);
         this.svgDivElement.style.visibility = 'hidden';
-        this.load(svgElement);
+        this.load(svgElement, this.afterLoadCB);
         return;
     } else if (SVGSVGElement.prototype.isPrototypeOf(svg)) {
 
@@ -89,6 +102,11 @@ SVGRender.prototype.load = function (svg) {
          */
         this.svgElement = svg;
         this.loaded = true;
+        //finally call the callback
+        setTimeout(function () {
+            this.afterLoadCB();
+        }.bind(this), 0);
+
         return;
     } else {
         throw "Unknown svg type in svg-render!";
@@ -98,7 +116,7 @@ SVGRender.prototype.load = function (svg) {
  * Start rendering
  * @param {Object} options - contains numbers FPS, time, imagesCount and function progressSignal
  * @param {function} callback
- * @returns {undefined}
+ * @returns {boolean} if the rendering was started
  * 
  * @public
  */
@@ -118,8 +136,8 @@ SVGRender.prototype.render = function (options, callback) {
 
     if (!this.loaded) {
         //todo: more elegant solution
-        setTimeout(this.render.bind(this, options, callback), 100);
-        return;
+        this.errMessage = "Input file not loaded yet";
+        return false;
     }
 
     /**
@@ -161,7 +179,9 @@ SVGRender.prototype.render = function (options, callback) {
         //imagesCount was given
         if (options.time && options.FPS) {
             //FPS+time were also given and the tree given parameters are contradicting
-            throw "Conflicting parameters FPS,time,imagesCount";
+            this.finished = true;
+            this.errMessage = "Conflicting parameters FPS,time,imagesCount";
+            return false;
         } else if (options.time) {
             this.FPS = this.imagesCount * 1000 / this.timeMS;
         } else if (options.FPS) {
@@ -201,6 +221,7 @@ SVGRender.prototype.render = function (options, callback) {
      */
     this.canvas = (options.canvas || document.createElement('canvas')); //default begin time
 
+    return true;
 };
 
 /**
@@ -428,6 +449,16 @@ SVGRender.prototype.deepCopy = function (src) {
 SVGRender.prototype.isActive = function () {
     return !(this.finished);
 };
+
+/**
+ * Get last error message string
+ * @public
+ * @returns {String} 
+ */
+SVGRender.prototype.getErrorMessage = function () {
+    return this.errMessage;
+};
+
 SVGElement.prototype.getTransformAnim = function () {
     var matrix = document.createElementNS("http://www.w3.org/2000/svg", "svg").createSVGMatrix();
     if (!this.transform || !this.transform.animVal) {
