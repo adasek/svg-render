@@ -1,17 +1,28 @@
 {
-    "name": "SVGRender",
-    "version": "1.0.0",
-    "keywords": ["svg", "animation", "rendering"],
-    "author": "A&A",
-    "contributors": [
-        {
-            "name": "Adam Benda",
-            "email": "adam@adasek.cz"
-        },
-        {
-            "name": "Ondrej Benda",
-            "email": "ai_box@volny.cz"
-        }
-    ],
-    "dependencies": {}
+  "name": "SVGRender",
+  "version": "1.0.0",
+  "keywords": [
+    "svg",
+    "animation",
+    "rendering"
+  ],
+  "author": "A&A",
+  "contributors": [
+    {
+      "name": "Adam Benda",
+      "email": "adam@adasek.cz"
+    },
+    {
+      "name": "Ondrej Benda",
+      "email": "ai_box@volny.cz"
+    }
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "jasmine": "^2.4.1",
+    "jasmine-core": "^2.4.1",
+    "karma": "^1.1.0",
+    "karma-chrome-launcher": "^1.0.1",
+    "karma-jasmine": "^1.0.2"
+  }
 }
